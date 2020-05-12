@@ -1,0 +1,54 @@
+{{>head}}
+<div style="margin-top: 16rem; max-width: 600px;" class="container p-4 rounded border border-white">
+    <h4 class="display-4 p-3 text-light text-center rounded m-2 ">{{title}}</h4>
+
+    {{#if invalidUserError}}
+    <div class="danger">
+        {{invalidUserError}}
+    </div>
+
+    {{/if}}
+
+    <form method="POST" action="/user/login" class="login">
+        <div class="form-groups my-4">
+
+            {{#if emailErrorMessage}}
+
+            <input class="{{errorClass}} form-control bg-light form-control-lg" type="text" placeholder="Email"
+                name="email">
+
+            <div class="invalid-feedback">
+                {{emailErrorMessage}}
+            </div>
+
+            {{else}}
+            <input class="form-control bg-light form-control-lg" type="text" placeholder="Email" name="email">
+
+            {{/if}}
+
+        </div>
+
+        <div class="form-groups my-4">
+
+            {{#if passwordErrorMessage }}
+
+            <input class="{{errorClass}} form-control bg-light form-control-lg" type="password" placeholder="Password"
+                name="password">
+
+            <div class="invalid-feedback">
+                {{passwordErrorMessage}}
+            </div>
+
+            {{else}}
+            <input class="form-control bg-light form-control-lg" type="password" placeholder="Password" name="password">
+
+            {{/if}}
+
+        </div>
+
+        <div class="text-center">
+            <button class="btn m-5 btn-lg btn-light">{{title}}</button>
+        </div>
+    </form>
+</div>
+{{!-- <script src="/js/login.js"></script> --}}

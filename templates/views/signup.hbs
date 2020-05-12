@@ -1,0 +1,108 @@
+{{>head}}
+<div style="margin-top: 8rem; max-width: 600px;" class="container bg-light p-4 rounded">
+    <h2 class=" display-4 text-center p2 text-primary rounded">{{title}}</h4>
+
+        <form method="POST" action="/user/signup" class="my-5">
+            <div class="form-group">
+
+                {{#if firstNameErrorMessage}}
+                <input class=" {{errorClass}} form-control form-control-lg" type="text" placeholder="First Name"
+                    name="firstName" id="firstName">
+
+                <div class="invalid-feedback">
+                    {{firstNameErrorMessage}}
+                </div>
+
+                {{else}}
+                <input class="form-control form-control-lg" type="text" placeholder="First Name" name="firstName">
+
+                {{/if}}
+
+            </div>
+            <div class="form-group">
+
+                {{#if lastNameErrorMessage}}
+                <input class=" {{errorClass}} form-control form-control-lg" type="text" placeholder="Last Name"
+                    name="lastName">
+
+                <div class="invalid-feedback">
+                    {{lastNameErrorMessage}}
+                </div>
+
+                {{else}}
+                <input class="form-control form-control-lg" type="text" placeholder="Last Name" name="lastName">
+
+                {{/if}}
+
+            </div>
+
+            <div class="form-group">
+
+                {{#if ageErrorMessage}}
+                <input class=" {{errorClass}} form-control form-control-lg" type="text" placeholder="Age" name="Age">
+
+                <div class="invalid-feedback">
+                    {{ageErrorMessage}}
+                </div>
+
+                {{else}}
+                <input class="form-control form-control-lg" type="text" placeholder="Age" name="age">
+
+                {{/if}}
+
+            </div>
+
+            <div class="form-group">
+
+                {{#if emailErrorMessage}}
+                <input class=" {{errorClass}} form-control form-control-lg" type="text" placeholder="Email"
+                    name="email">
+
+                <div class="invalid-feedback">
+                    {{emailErrorMessage}}
+                </div>
+
+                {{else}}
+                <input class="form-control form-control-lg" type="text" placeholder="Email" name="email">
+
+                {{/if}}
+            </div>
+
+            <div class="form-group">
+
+                {{#if passwordErrorMessage}}
+                <input class=" {{errorClass}} form-control form-control-lg" type="text" placeholder="Password"
+                    name="password">
+
+                <div class="invalid-feedback">
+                    {{passwordErrorMessage}}
+                </div>
+
+                {{else}}
+                <input class="form-control form-control-lg" type="text" placeholder="Password" name="password">
+
+                {{/if}}
+
+            </div>
+
+            <div class="form-group">
+                {{#if confirmPasswordErrorMessage}}
+                <input class=" {{errorClass}} form-control form-control-lg" type="text" placeholder="Confirm Password"
+                    name="confirmPassword">
+
+                <div class="invalid-feedback">
+                    {{confirmPasswordErrorMessage}}
+                </div>
+
+                {{else}}
+                <input class="form-control form-control-lg" type="text" placeholder="Confirm Password"
+                    name="confirmPassword">
+
+                {{/if}}
+            </div>
+            <div class="text-center">
+                <button class=" my-3 btn btn-lg btn-primary">{{title}}</button>
+            </div>
+        </form>
+</div>
+{{!-- <script src="/js/signup.js"></script> --}}

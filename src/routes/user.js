@@ -4,38 +4,158 @@ const sharp = require("sharp");
 const User = require("../models/users");
 const authenticate = require("../middleware/authenticate");
 const { welcomeEmail, cancelEmail } = require("../emails/emails");
+const { getError } = require("../helpers/getErrors");
+const { getLoginPage } = require("../helpers/getLoginPage");
+const { getSignupPage } = require("../helpers/getSignupPage");
 
 const router = express.Router();
 
-// Signup User
-router.post("/user/signup", async (request, response) => {
-  const user = new User(request.body);
+const {
+  firstNameValidation,
+  lastNameValidation,
+  ageValidation,
+  signupEmailValidation,
+  signupPasswordValidation,
+  confirmPasswordValidation,
+} = require("../middleware/signupValidation");
 
+// Get the user Sign Up Page
+router.get("/user/signup", async (request, response) => {
   try {
-    const token = await user.generateToken();
+    const validationErrors = {};
+    const errorClass = "";
+    const statusCode = 200;
 
-    welcomeEmail(user.email, user.name);
-
-    response.status(201).send({ user, token });
-  } catch (error) {
-    response.status(400).send(error);
-  }
-});
-
-// Login user.
-router.post("/user/login", async (request, response) => {
-  try {
-    const user = await User.findByCredentials(
-      request.body.email,
-      request.body.password
+    getSignupPage(
+      request,
+      response,
+      getError,
+      validationErrors,
+      errorClass,
+      statusCode
     );
-    const token = await user.generateToken();
-
-    response.status(200).send({ user, token });
   } catch (error) {
-    response.sendStatus(400);
+    response.sendStatus(500);
   }
 });
+
+// Post the user Signup Data
+router.post(
+  "/user/signup",
+  [
+    firstNameValidation,
+    lastNameValidation,
+    ageValidation,
+    signupEmailValidation,
+    signupPasswordValidation,
+    confirmPasswordValidation,
+  ],
+  async (request, response) => {
+    try {
+      const validationErrors = validationResult(request);
+
+      if (!validationErrors.isEmpty()) {
+        const errorClass = "is-invalid";
+        const statusCode = 400;
+
+        return getSignupPage(
+          request,
+          response,
+          getError,
+          validationErrors,
+          errorClass,
+          statusCode
+        );
+      }
+      const user = new User(request.body);
+
+      const token = await user.generateToken();
+
+      welcomeEmail(user.email, user.name);
+
+      response.status(201).send({ token, user });
+    } catch (error) {
+      response.sendstatus(500);
+    }
+  }
+);
+
+const {
+  loginEmailValidation,
+  loginPasswordValidation,
+} = require("../middleware/loginValidation");
+
+//Get User Login Page
+router.get("/user/login", async (request, response) => {
+  const validationErrors = {};
+  const errorClass = "";
+  const statusCode = 200;
+  const invalidUserError = undefined;
+
+  getLoginPage(
+    request,
+    response,
+    getError,
+    validationErrors,
+    errorClass,
+    statusCode,
+    invalidUserError
+  );
+});
+
+//Post the login data to the route
+router.post(
+  "/user/login",
+  [loginEmailValidation, loginPasswordValidation],
+  async (request, response) => {
+    try {
+      const validationErrors = validationResult(request);
+
+      if (!validationErrors.isEmpty()) {
+        const errorClass = "is-invalid";
+        const statusCode = 400;
+        const invalidUserError = undefined;
+
+        return getLoginPage(
+          request,
+          response,
+          getError,
+          validationErrors,
+          errorClass,
+          statusCode,
+          invalidUserError
+        );
+      }
+
+      const { email, password } = request.body;
+
+      const user = await User.findByCredentials(email, password);
+
+      const token = await user.generateToken();
+
+      response.status(200).send({ token });
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        const errorClass = "is-invalid";
+        const statusCode = 400;
+        const invalidUserError = error.message;
+        const validationErrors = {};
+
+        return getLoginPage(
+          request,
+          response,
+          getError,
+          validationErrors,
+          errorClass,
+          statusCode,
+          invalidUserError
+        );
+      } else {
+        response.sendStatus(500);
+      }
+    }
+  }
+);
 
 // Logout user
 router.post("/user/logout", authenticate, async (request, response) => {
@@ -85,8 +205,6 @@ router.patch("/user/update", authenticate, async (request, response) => {
     response.status(200).send(request.user);
   } catch (error) {
     response.sendStatus(400);
-
-    console.log(error);
   }
 });
 
@@ -140,7 +258,6 @@ router.post("/user/profile_picture", authenticate, (request, response) => {
 });
 
 //Delete user profile picture
-
 router.delete(
   "/user/delete/profile_picture",
   authenticate,

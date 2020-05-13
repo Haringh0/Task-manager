@@ -71,7 +71,7 @@
             <div class="form-group">
 
                 {{#if passwordErrorMessage}}
-                <input class=" {{errorClass}} form-control form-control-lg" type="text" placeholder="Password"
+                <input class=" {{errorClass}} form-control form-control-lg" type="password" placeholder="Password"
                     name="password">
 
                 <div class="invalid-feedback">
@@ -79,7 +79,7 @@
                 </div>
 
                 {{else}}
-                <input class="form-control form-control-lg" type="text" placeholder="Password" name="password">
+                <input class="form-control form-control-lg" type="password" placeholder="Password" name="password">
 
                 {{/if}}
 
@@ -87,15 +87,15 @@
 
             <div class="form-group">
                 {{#if confirmPasswordErrorMessage}}
-                <input class=" {{errorClass}} form-control form-control-lg" type="text" placeholder="Confirm Password"
-                    name="confirmPassword">
+                <input class=" {{errorClass}} form-control form-control-lg" type="password"
+                    placeholder="Confirm Password" name="confirmPassword">
 
                 <div class="invalid-feedback">
                     {{confirmPasswordErrorMessage}}
                 </div>
 
                 {{else}}
-                <input class="form-control form-control-lg" type="text" placeholder="Confirm Password"
+                <input class="form-control form-control-lg" type="password" placeholder="Confirm Password"
                     name="confirmPassword">
 
                 {{/if}}

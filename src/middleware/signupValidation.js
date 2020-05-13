@@ -60,8 +60,6 @@ module.exports = {
     .custom(async (email) => {
       const existingUser = await User.findOne({ email });
 
-      console.log(email);
-
       if (existingUser) {
         throw new Error("email exists! use another email.");
       }

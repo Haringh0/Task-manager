@@ -6,7 +6,13 @@ const Task = require("./tasks");
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    firstName: {
+      type: String,
+      required: true,
+      minlength: 5,
+      trim: true,
+    },
+    lastName: {
       type: String,
       required: true,
       minlength: 5,
@@ -55,6 +61,10 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.virtual("full_name").get(function () {
+  return this.first_name + " " + this.last_name;
+});
+
 userSchema.virtual("tasks", {
   ref: "tasks",
   localField: "_id",
@@ -82,7 +92,9 @@ userSchema.set("toJSON", {
 });
 
 userSchema.methods.generateToken = async function () {
-  const token = jwt.sign({ _id: this._id }, process.env.TOKEN_KEY);
+  const token = jwt.sign({ _id: this._id }, process.env.TOKEN_KEY, {
+    expiresIn: "1h",
+  });
 
   this.tokens.push({ token });
 

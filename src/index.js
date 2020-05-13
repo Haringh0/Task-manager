@@ -14,6 +14,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(userRouter);
 app.use(taskRouter);
 

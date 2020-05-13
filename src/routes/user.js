@@ -7,6 +7,7 @@ const { welcomeEmail, cancelEmail } = require("../emails/emails");
 const { getError } = require("../helpers/getErrors");
 const { getLoginPage } = require("../helpers/getLoginPage");
 const { getSignupPage } = require("../helpers/getSignupPage");
+const { validationResult } = require("express-validator");
 
 const router = express.Router();
 
@@ -67,15 +68,21 @@ router.post(
           statusCode
         );
       }
+
       const user = new User(request.body);
 
       const token = await user.generateToken();
 
       welcomeEmail(user.email, user.name);
 
-      response.status(201).send({ token, user });
+      response
+        .status(200)
+        .cookie("Authorize", "Bearer " + token, {
+          maxAge: 7_200_000,
+        })
+        .redirect("/user/signup");
     } catch (error) {
-      response.sendstatus(500);
+      response.sendStatus(500);
     }
   }
 );
@@ -133,7 +140,12 @@ router.post(
 
       const token = await user.generateToken();
 
-      response.status(200).send({ token });
+      response
+        .status(200)
+        .cookie("Authorize", "Bearer " + token, {
+          maxAge: 7_200_000,
+        })
+        .redirect("/user/login");
     } catch (error) {
       if (error.name === "ValidationError") {
         const errorClass = "is-invalid";
@@ -269,8 +281,6 @@ router.delete(
 
       response.sendStatus(200);
     } catch (error) {
-      console.log(error);
-
       response.sendStatus(500);
     }
   }

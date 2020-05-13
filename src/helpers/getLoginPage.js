@@ -26,6 +26,8 @@ module.exports = {
       );
     } catch (error) {
       response.sendStatus(500);
+
+      console.log(error);
     }
   },
 };
